@@ -13,6 +13,8 @@ package tttx9;
  */
 public class GameState {
 	private int[][] state = new int[9][9];
+	private GameResult gameResult = GameResult.UNFINISHED;
+	private int winner = 0;
 
 	/**
 	 * Constructor for the GameState. Intializes a new Gamestate.
@@ -48,17 +50,16 @@ public class GameState {
 	 * @param singleFieldMove
 	 * @param playerId
 	 */
-	private GameResult executeMove(int subGameMove, int singleFieldMove, int playerId) {
+	private void executeMove(int subGameMove, int singleFieldMove, int playerId) {
+		// Execute move:
 		state[subGameMove][singleFieldMove] = playerId;
 		// Check whether the game is finished:
-
-		//speler heeft gewonnen
-		GameResult result = checkForWinner(subGameMove, playerId);
-		if (result != GameResult.UNFINISHED)
-			return result;
+		if (checkForWinner(subGameMove, playerId) == GameResult.VICTORY) {
+			this.gameResult = GameResult.VICTORY;
+			this.winner = playerId; // Is het handig als dit een int is?
+		}
 		if (allFieldsTaken())
-			return GameResult.DRAW;
-		return GameResult.UNFINISHED;
+			this.gameResult = GameResult.DRAW;
 	}
 
 	private GameResult checkForWinner(int pos, int playerId) {
