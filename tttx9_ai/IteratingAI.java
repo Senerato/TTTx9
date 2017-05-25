@@ -1,5 +1,15 @@
-package tttx9;
+package tttx9_ai;
 
+import tttx9.GameState;
+import tttx9.Move;
+import tttx9.Player;
+
+/**
+ * 
+ * @author Senerato.
+ * An AI that always claims the most left place on the highest 
+ * possible row.
+ */
 public class IteratingAI implements Player {
 
 	@Override

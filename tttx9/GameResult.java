@@ -1,5 +1,10 @@
 package tttx9;
 
+/**
+ * 
+ * @author Senerato.
+ *
+ */
 public enum GameResult {
 	UNFINISHED, DRAW, VICTORY_P1, VICTORY_P2;
 

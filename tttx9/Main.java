@@ -1,4 +1,7 @@
 package tttx9;
+
+import tttx9_ai.IteratingAI;
+
 /**
  * 
  * @author Senerato
