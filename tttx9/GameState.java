@@ -5,7 +5,7 @@ package tttx9;
  * @author Senerato.
  * The state of the game. The state is represented in a double array,
  * where the inner arrays is a 9 long integer array representing a
- * single boter kaas en eieren game. The values are encoded as follows:
+ * single tic tac toe game. The values are encoded as follows:
  * 
  * 0: Empty field
  * 1: Field belonging to player 1.
@@ -53,7 +53,9 @@ public class GameState {
 		// Check whether the game is finished:
 
 		//speler heeft gewonnen
-		return checkForWinner(subGameMove, playerId);
+		GameResult result = checkForWinner(subGameMove, playerId);
+		if (result != GameResult.UNFINISHED)
+			return result;
 		if (allFieldsTaken())
 			return GameResult.DRAW;
 		return GameResult.UNFINISHED;
@@ -62,12 +64,16 @@ public class GameState {
 	private GameResult checkForWinner(int pos, int playerId) {
 		int x = pos % 3;
 		int y = pos / 3;
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++) // Check the diagonal line
 			if (state[i][i] == playerId)
-				return GameResult.values(playerId);
-		for (int i = 0; i < 3; i++)
+				return GameResult.VICTORY;
+		for (int i = 0; i < 3; i++) // Check the horizontal line
 			if (state[x][i] == playerId)
-					
+				return GameResult.VICTORY;
+		for (int i = 0; i < 3; i++) // Check the vertical line
+			if (state[i][y] == playerId)
+				return GameResult.VICTORY;
+		return GameResult.UNFINISHED;
 	}
 
 	private boolean allFieldsTaken() {
