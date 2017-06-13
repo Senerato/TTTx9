@@ -15,7 +15,7 @@ public class GameState {
 	private TTTx9Game TTTGame = null;
 	private int[][] state = new int[9][9];
 	private GameResult gameResult = GameResult.UNFINISHED;
-	private int winner = 0;
+	private Player winner = null;
 
 	/**
 	 * Constructor for the GameState. Intializes a new Gamestate.
@@ -34,12 +34,12 @@ public class GameState {
 	 * @param move a move that alters the gameState.
 	 * @param playerId the player that performs the move.
 	 */
-	public void submitMove(Move move, int playerId) {
+	public void submitMove(Move move, Player player) {
 		int subGameMove = move.getSubGame();
 		int singleFieldMove = move.getSingleField();
 		if (subGameMove >= 0 && subGameMove < 9 && singleFieldMove >= 0 && singleFieldMove < 9) // Check whether the move is legal
 			if (isFreeField(move)) // And whether or not the field is free
-				executeMove(subGameMove, singleFieldMove, playerId);
+				executeMove(subGameMove, singleFieldMove, player);
 			else
 				throw new Error("Illegal move: field already in use");
 		else
@@ -53,13 +53,13 @@ public class GameState {
 	 * @param singleFieldMove
 	 * @param playerId
 	 */
-	private void executeMove(int subGameMove, int singleFieldMove, int playerId) {
+	private void executeMove(int subGameMove, int singleFieldMove, Player player) {
 		// Execute move:
-		state[subGameMove][singleFieldMove] = playerId;
+		state[subGameMove][singleFieldMove] = player.getId();
 		// Check whether the game is finished:
-		if (checkForWinner(subGameMove, playerId) == GameResult.VICTORY) {
+		if (checkForWinner(subGameMove, player.getId()) == GameResult.VICTORY) {
 			this.gameResult = GameResult.VICTORY;
-			this.winner = playerId; // Is het handig als dit een int is?
+			this.winner = player;
 		}
 		if (allFieldsTaken())
 			this.gameResult = GameResult.DRAW;
@@ -69,15 +69,15 @@ public class GameState {
 		int x = pos % 3;
 		int y = pos / 3;
 		for (int i = 0; i < 3; i++) // Check the diagonal line
-			if (state[i][i] == playerId)
-				return GameResult.VICTORY;
+			if (state[i][i] != playerId)
+				return GameResult.UNFINISHED;
 		for (int i = 0; i < 3; i++) // Check the horizontal line
-			if (state[x][i] == playerId)
-				return GameResult.VICTORY;
+			if (state[x][i] != playerId)
+				return GameResult.UNFINISHED;
 		for (int i = 0; i < 3; i++) // Check the vertical line
-			if (state[i][y] == playerId)
-				return GameResult.VICTORY;
-		return GameResult.UNFINISHED;
+			if (state[i][y] != playerId)
+				return GameResult.UNFINISHED;
+		return GameResult.VICTORY;
 	}
 
 	private boolean allFieldsTaken() {
@@ -96,9 +96,32 @@ public class GameState {
 		return this.gameResult;
 	}
 	
+	public Player getWinner() {
+		return winner;
+	}
+	
 	@Override
 	public String toString() {
-		return "Tostring van GameState moet nog gedaan worden";
+		StringBuilder sb = new StringBuilder();
+		
+		
+		
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++)
+				sb.append(printSingleTTTGame(state[i * 3 + j]) + " volgende: ");
+			sb.append("\n\n");
+		}
+		return sb.toString();
+	}
+
+	private String printSingleTTTGame(int[] singleTTT) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++)
+				sb.append(singleTTT[i * 3 + j] + " ");
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 
 }

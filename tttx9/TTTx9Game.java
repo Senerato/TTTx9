@@ -1,4 +1,7 @@
 package tttx9;
+
+import java.util.ArrayList;
+
 /**
  * 
  * @author Senerato.
@@ -6,12 +9,10 @@ package tttx9;
  */
 public class TTTx9Game {
 	private View view;
-	private Player player1;
-	private Player player2;
+	private ArrayList<Player> players = new ArrayList<Player>();
 	
 	private boolean gameFinished = false;
-	private int currentTurn = (int) (Math.random() * 2 + 1); // Specifies the player that currently 
-	//has the turn. 1 for player 1, 2 for player 2.
+	private Player hasTurn;
 	private GameState gs;
 	
 	/**
@@ -21,9 +22,10 @@ public class TTTx9Game {
 	 */
 	public TTTx9Game(View view, Player p1, Player p2) {
 		this.view = view;
-		this.player1 = p1;
-		this.player2 = p2;
+		this.players.add(p1);
+		this.players.add(p2);
 		this.gs = new GameState(this);
+		this.hasTurn = players.get((int) (Math.random() * 2)); // Specifies the player that currently
 	}
 	
 	/**
@@ -52,9 +54,9 @@ public class TTTx9Game {
 	 */
 	private void performTurn() {
 		Move nextMove = nextPlayerMove();
-		gs.submitMove(nextPlayerMove(), currentTurn);
-		view.updateUi(gs, nextMove);
-		currentTurn = currentTurn % 2 + 1;
+		gs.submitMove(nextPlayerMove(), hasTurn);
+		view.updateUi(this, gs, nextMove);
+		hasTurn = players.get(hasTurn.getId() % 2);
 	}
 
 	/**
@@ -63,11 +65,15 @@ public class TTTx9Game {
 	 */
 	private Move nextPlayerMove() {
 		Move nextMove;
-		if (currentTurn == 2)
-			nextMove = player1.nextTurn(gs);
+		if (hasTurn.getId() == 2)
+			nextMove = players.get(0).nextTurn(gs);
 		else
-			nextMove = player2.nextTurn(gs);
+			nextMove = players.get(1).nextTurn(gs);
 		return nextMove;
+	}
+
+	public Player getPlayerTurn() {
+		return this.hasTurn;
 	}
 	
 }

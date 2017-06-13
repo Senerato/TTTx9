@@ -13,10 +13,10 @@ public class View {
 	 * @param newGameState
 	 * @param newMove
 	 */
-	public void updateUi(GameState newGameState, Move newMove) {
-		newGameState.toString();
+	public void updateUi(TTTx9Game newTTTx9Game, GameState newGameState, Move newMove) {
+		System.out.println("\n" + newGameState.toString());
 		if (newGameState.getGameResult() == GameResult.UNFINISHED) {
-			System.out.println("It is now player " + newGameState.g);
+			System.out.println("It is now player " + newTTTx9Game.getPlayerTurn());
 		}
 	}
 
