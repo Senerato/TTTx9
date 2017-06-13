@@ -12,14 +12,17 @@ package tttx9;
  * 2: Field belonging to player 2.
  */
 public class GameState {
+	private TTTx9Game TTTGame = null;
 	private int[][] state = new int[9][9];
 	private GameResult gameResult = GameResult.UNFINISHED;
 	private int winner = 0;
 
 	/**
 	 * Constructor for the GameState. Intializes a new Gamestate.
+	 * @param ttTx9Game 
 	 */
-	public GameState() {
+	public GameState(TTTx9Game TTTx9Game) {
+		this.TTTGame = TTTx9Game;
 		for (int[] subGame : state)
 			for (int singleField : subGame)
 				singleField = 0;
@@ -87,6 +90,15 @@ public class GameState {
 
 	public boolean isFreeField(Move move) {
 		return state[move.getSubGame()][move.getSingleField()] == 0;
+	}
+	
+	public GameResult getGameResult() {
+		return this.gameResult;
+	}
+	
+	@Override
+	public String toString() {
+		return "Tostring van GameState moet nog gedaan worden";
 	}
 
 }

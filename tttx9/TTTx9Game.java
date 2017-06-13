@@ -23,16 +23,15 @@ public class TTTx9Game {
 		this.view = view;
 		this.player1 = p1;
 		this.player2 = p2;
-		this.gs = new GameState();
-		this.play();
+		this.gs = new GameState(this);
 	}
 	
 	/**
 	 * Play function. Runs the game, giving turns to both players
 	 * while printing the game status.
 	 */
-	private void play() {
-		while(!gameFinished) {
+	public void play() {
+		while(gs.getGameResult() == GameResult.UNFINISHED) {
 			performTurn();
 			checkGameStatus();
 		}

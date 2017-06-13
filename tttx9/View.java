@@ -14,8 +14,10 @@ public class View {
 	 * @param newMove
 	 */
 	public void updateUi(GameState newGameState, Move newMove) {
-		// TODO Auto-generated method stub
-		
+		newGameState.toString();
+		if (newGameState.getGameResult() == GameResult.UNFINISHED) {
+			System.out.println("It is now player " + newGameState.g);
+		}
 	}
 
 }
