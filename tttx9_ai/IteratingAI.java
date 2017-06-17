@@ -10,7 +10,11 @@ import tttx9.Player;
  * An AI that always claims the most left place on the highest 
  * possible row.
  */
-public class IteratingAI implements Player {
+public class IteratingAI extends Player {
+
+	public IteratingAI(String name, int i) {
+		super(name, i);
+	}
 
 	@Override
 	public Move nextTurn(GameState gs) {
