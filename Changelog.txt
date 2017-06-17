@@ -1,0 +1,17 @@
+Version 0.1.1:
+
+Changes:
+
+- Created changelog
+
+Known bugs:
+
+-
+
+Upcoming features:
+
+- Other ways of accessing a GameState, for example via a coordinate system.
+- Input in console for HumanPlayer.
+- Implementing the rule that a selected box represents the sub-slidingGame
+the next player is going to solve.
+- Creating a clear GameState representation for the TUI.

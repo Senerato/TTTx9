@@ -11,9 +11,11 @@ public class TTTx9Game {
 	private View view;
 	private ArrayList<Player> players = new ArrayList<Player>();
 	
-	private boolean gameFinished = false;
 	private Player hasTurn;
 	private GameState gs;
+	private Player winner;
+	private Move lastMove;
+	private GameResult gameResult = GameResult.UNFINISHED;
 	
 	/**
 	 * Initiate ga game with two players.
@@ -24,7 +26,7 @@ public class TTTx9Game {
 		this.view = view;
 		this.players.add(p1);
 		this.players.add(p2);
-		this.gs = new GameState(this);
+		this.gs = new GameState();
 		this.hasTurn = players.get((int) (Math.random() * 2)); // Specifies the player that currently
 	}
 	
@@ -33,9 +35,10 @@ public class TTTx9Game {
 	 * while printing the game status.
 	 */
 	public void play() {
-		while(gs.getGameResult() == GameResult.UNFINISHED) {
+		while(gameResult == GameResult.UNFINISHED) {
 			performTurn();
 			checkGameStatus();
+			hasTurn = players.get(hasTurn.getId() % 2);
 		}
 		//printGameSummary();
 	}
@@ -46,7 +49,18 @@ public class TTTx9Game {
 	 * moves are exhausted.
 	 */
 	private void checkGameStatus() {
-		
+		// Check whether the game is finished:
+		if (gs.checkForWinner(lastMove.getSubGame(), hasTurn.getId()) == GameResult.VICTORY) {
+			this.gameResult = GameResult.VICTORY;
+			this.winner = players.get((int) (Math.random() * 2));
+		}
+		if (gs.allFieldsTaken())
+			this.gameResult = GameResult.DRAW;
+	}
+	
+
+	public GameResult getGameResult() {
+		return this.gameResult;
 	}
 
 	/**
@@ -54,9 +68,9 @@ public class TTTx9Game {
 	 */
 	private void performTurn() {
 		Move nextMove = nextPlayerMove();
-		gs.submitMove(nextPlayerMove(), hasTurn);
-		view.updateUi(this, gs, nextMove);
-		hasTurn = players.get(hasTurn.getId() % 2);
+		gs.submitMove(nextMove, hasTurn);
+		this.lastMove = nextMove;
+		view.updateUi(this, gs, lastMove);
 	}
 
 	/**

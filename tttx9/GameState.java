@@ -12,17 +12,13 @@ package tttx9;
  * 2: Field belonging to player 2.
  */
 public class GameState {
-	private TTTx9Game TTTGame = null;
 	private int[][] state = new int[9][9];
-	private GameResult gameResult = GameResult.UNFINISHED;
-	private Player winner = null;
 
 	/**
 	 * Constructor for the GameState. Intializes a new Gamestate.
 	 * @param ttTx9Game 
 	 */
-	public GameState(TTTx9Game TTTx9Game) {
-		this.TTTGame = TTTx9Game;
+	public GameState() {
 		for (int[] subGame : state)
 			for (int singleField : subGame)
 				singleField = 0;
@@ -54,18 +50,41 @@ public class GameState {
 	 * @param playerId
 	 */
 	private void executeMove(int subGameMove, int singleFieldMove, Player player) {
-		// Execute move:
 		state[subGameMove][singleFieldMove] = player.getId();
-		// Check whether the game is finished:
-		if (checkForWinner(subGameMove, player.getId()) == GameResult.VICTORY) {
-			this.gameResult = GameResult.VICTORY;
-			this.winner = player;
-		}
-		if (allFieldsTaken())
-			this.gameResult = GameResult.DRAW;
 	}
 
-	private GameResult checkForWinner(int pos, int playerId) {
+	public boolean isFreeField(Move move) {
+		return state[move.getSubGame()][move.getSingleField()] == 0;
+	}
+	
+	public int[][] getState() {
+		return this.state;
+	}
+	
+	/**
+	 * A function that checks whether all fields in a GameState
+	 * are taken.
+	 * @return true if all fields in the game are taken, false
+	 * otherwise.
+	 */
+	public boolean allFieldsTaken() {
+		for (int i = 0; i < 9; i++)
+			for (int j = 0; j < 9; j++)
+				if (isFreeField(new Move(i, j)))
+					return false;
+		return true;
+	}
+	
+	/**
+	 * A function to check whether or not a move lets the player
+	 * that performs it win.
+	 * @param pos the field in the subGame that is taken by the
+	 * player.
+	 * @param playerId the player performing the turn.
+	 * @return GameResult.VICTORY if the player wins by performing
+	 * this turn, GameResult.UNFINISHED otherwise.
+	 */
+	public GameResult checkForWinner(int pos, int playerId) {
 		int x = pos % 3;
 		int y = pos / 3;
 		for (int i = 0; i < 3; i++) // Check the diagonal line
@@ -78,26 +97,6 @@ public class GameState {
 			if (state[i][y] != playerId)
 				return GameResult.UNFINISHED;
 		return GameResult.VICTORY;
-	}
-
-	private boolean allFieldsTaken() {
-		for (int i = 0; i < 9; i++)
-			for (int j = 0; j < 9; j++)
-				if (isFreeField(new Move(i, j)))
-					return false;
-		return true;
-	}
-
-	public boolean isFreeField(Move move) {
-		return state[move.getSubGame()][move.getSingleField()] == 0;
-	}
-	
-	public GameResult getGameResult() {
-		return this.gameResult;
-	}
-	
-	public Player getWinner() {
-		return winner;
 	}
 	
 	@Override
