@@ -44,4 +44,9 @@ public class Move {
 	public Coord getCoord() {
 		return new Coord(singleField);
 	}
+	
+	@Override
+	public String toString() {
+		return "Subgame: " + subGame + " singleField: " + singleField + ".";
+	}
 }

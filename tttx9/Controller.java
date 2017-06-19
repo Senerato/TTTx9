@@ -1,5 +1,10 @@
 package tttx9;
 
+/**
+ * 
+ * @author Senerato.
+ *
+ */
 public class Controller {
 
 	TTTx9Game ttt;
