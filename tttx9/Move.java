@@ -21,11 +21,27 @@ public class Move {
 		this.singleField = singleField;
 	}
 	
+	/**
+	 * Specifies a move in the TTTx9Game.
+	 * @param singleField the field in a subTTT game.
+	 */
+	public Move(int singleField) {
+		this.singleField = singleField;
+	}
+	
 	public int getSubGame() {
 		return subGame;
 	}
 	
 	public int getSingleField() {
 		return singleField;
+	}
+
+	public void setSubGame(int subGame) {
+		this.subGame = subGame;
+	}
+
+	public Coord getCoord() {
+		return new Coord(singleField);
 	}
 }

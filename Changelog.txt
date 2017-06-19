@@ -1,17 +1,18 @@
-Version 0.1.1:
+Version 0.1.2:
 
 Changes:
 
-- Created changelog
+- Creating a clear GameState representation for the TUI.
+- Other ways of accessing a GameState, for example via a coordinate system.
+- Implementing the rule that a selected box represents the sub-slidingGame
+the next player is going to solve.
+- Input in console for HumanPlayer.
+- Fixed: Winning a field does not do anything.
 
 Known bugs:
 
--
+- IteratingAI claims a field that is already in use.
 
 Upcoming features:
 
-- Other ways of accessing a GameState, for example via a coordinate system.
-- Input in console for HumanPlayer.
-- Implementing the rule that a selected box represents the sub-slidingGame
-the next player is going to solve.
-- Creating a clear GameState representation for the TUI.
+- Better separate the model, view and controller.

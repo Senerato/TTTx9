@@ -12,8 +12,8 @@ import tttx9.Player;
  */
 public class IteratingAI extends Player {
 
-	public IteratingAI(String name, int i) {
-		super(name, i);
+	public IteratingAI(String name) {
+		super(name);
 	}
 
 	@Override

@@ -8,13 +8,16 @@ public class Player {
 	String name;
 	int id;
 	
-	public Player(String name, int id) {
+	public Player(String name) {
 		this.name = name;
-		this.id = id;
 	}
 	
 	public Move nextTurn(GameState gs) {
 		return null;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public int getId() {

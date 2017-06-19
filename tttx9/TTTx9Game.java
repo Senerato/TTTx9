@@ -10,11 +10,9 @@ import java.util.ArrayList;
 public class TTTx9Game {
 	private View view;
 	private ArrayList<Player> players = new ArrayList<Player>();
-	
 	private Player hasTurn;
 	private GameState gs;
 	private Player winner;
-	private Move lastMove;
 	private GameResult gameResult = GameResult.UNFINISHED;
 	
 	/**
@@ -24,6 +22,8 @@ public class TTTx9Game {
 	 */
 	public TTTx9Game(View view, Player p1, Player p2) {
 		this.view = view;
+		p1.setId(1);
+		p2.setId(2);
 		this.players.add(p1);
 		this.players.add(p2);
 		this.gs = new GameState();
@@ -36,6 +36,7 @@ public class TTTx9Game {
 	 */
 	public void play() {
 		while(gameResult == GameResult.UNFINISHED) {
+			System.out.println(hasTurn + " performs turn");
 			performTurn();
 			checkGameStatus();
 			hasTurn = players.get(hasTurn.getId() % 2);
@@ -48,11 +49,12 @@ public class TTTx9Game {
 	 * due to a player winning the game or because all possible
 	 * moves are exhausted.
 	 */
-	private void checkGameStatus() {
-		// Check whether the game is finished:
-		if (gs.checkForWinner(lastMove.getSubGame(), hasTurn.getId()) == GameResult.VICTORY) {
+	private void checkGameStatus() {	
+			// Check whether the game is finished:
+		if (gs.checkForWinner(hasTurn) == GameResult.VICTORY) {
 			this.gameResult = GameResult.VICTORY;
-			this.winner = players.get((int) (Math.random() * 2));
+			this.winner = hasTurn;
+			System.out.println(winner + " won the game!");
 		}
 		if (gs.allFieldsTaken())
 			this.gameResult = GameResult.DRAW;
@@ -69,20 +71,22 @@ public class TTTx9Game {
 	private void performTurn() {
 		Move nextMove = nextPlayerMove();
 		gs.submitMove(nextMove, hasTurn);
-		this.lastMove = nextMove;
-		view.updateUi(this, gs, lastMove);
+		view.updateUi(this, gs);
 	}
 
 	/**
-	 * Gives another player a turn
-	 * @return 
+	 * Gives another player a turn and returns the turn that player
+	 * performs.
+	 * @return the move the next player performs
 	 */
 	private Move nextPlayerMove() {
 		Move nextMove;
-		if (hasTurn.getId() == 2)
+		if (hasTurn.getId() == 1)
 			nextMove = players.get(0).nextTurn(gs);
 		else
 			nextMove = players.get(1).nextTurn(gs);
+		if (gs.getLastMove() != null)
+			nextMove.setSubGame(gs.getLastMove().getSingleField());
 		return nextMove;
 	}
 

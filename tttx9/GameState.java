@@ -1,5 +1,7 @@
 package tttx9;
 
+import java.util.ArrayList;
+
 /**
  * 
  * @author Senerato.
@@ -12,16 +14,12 @@ package tttx9;
  * 2: Field belonging to player 2.
  */
 public class GameState {
-	private int[][] state = new int[9][9];
+	private SubGame[] subGames = new SubGame[9];
+	private Move lastMove;
 
-	/**
-	 * Constructor for the GameState. Intializes a new Gamestate.
-	 * @param ttTx9Game 
-	 */
 	public GameState() {
-		for (int[] subGame : state)
-			for (int singleField : subGame)
-				singleField = 0;
+		for (int i = 0; i < 9; i++)
+			subGames[i] = new SubGame();
 	}
 
 	/**
@@ -35,32 +33,23 @@ public class GameState {
 		int singleFieldMove = move.getSingleField();
 		if (subGameMove >= 0 && subGameMove < 9 && singleFieldMove >= 0 && singleFieldMove < 9) // Check whether the move is legal
 			if (isFreeField(move)) // And whether or not the field is free
-				executeMove(subGameMove, singleFieldMove, player);
+				setOwner(subGameMove, new Coord(singleFieldMove % 3, singleFieldMove / 3), player);
 			else
 				throw new Error("Illegal move: field already in use");
 		else
 			throw new Error("Illegal move: field does not exists");
-	}
-
-	/**
-	 * executeMove updates the gameState with the submitted move
-	 * and checks if the game is finished.
-	 * @param subGameMove
-	 * @param singleFieldMove
-	 * @param playerId
-	 */
-	private void executeMove(int subGameMove, int singleFieldMove, Player player) {
-		state[subGameMove][singleFieldMove] = player.getId();
+		subGames[move.getSubGame()].checkForWinner(player);
+		this.lastMove = move;
 	}
 
 	public boolean isFreeField(Move move) {
-		return state[move.getSubGame()][move.getSingleField()] == 0;
+		return getOwner(move.getSubGame(), move.getSingleField()) == 0;
 	}
-	
-	public int[][] getState() {
-		return this.state;
+
+	public SubGame[] getState() {
+		return this.subGames;
 	}
-	
+
 	/**
 	 * A function that checks whether all fields in a GameState
 	 * are taken.
@@ -74,50 +63,78 @@ public class GameState {
 					return false;
 		return true;
 	}
-	
-	/**
-	 * A function to check whether or not a move lets the player
-	 * that performs it win.
-	 * @param pos the field in the subGame that is taken by the
-	 * player.
-	 * @param playerId the player performing the turn.
-	 * @return GameResult.VICTORY if the player wins by performing
-	 * this turn, GameResult.UNFINISHED otherwise.
-	 */
-	public GameResult checkForWinner(int pos, int playerId) {
-		int x = pos % 3;
-		int y = pos / 3;
-		for (int i = 0; i < 3; i++) // Check the diagonal line
-			if (state[i][i] != playerId)
-				return GameResult.UNFINISHED;
-		for (int i = 0; i < 3; i++) // Check the horizontal line
-			if (state[x][i] != playerId)
-				return GameResult.UNFINISHED;
-		for (int i = 0; i < 3; i++) // Check the vertical line
-			if (state[i][y] != playerId)
-				return GameResult.UNFINISHED;
-		return GameResult.VICTORY;
+
+	public GameResult checkForWinner(Player player) {
+		ArrayList<int[]> winningCombinations = new ArrayList<int[]>();
+		for (int x = 0; x < 3; x++) // Vertical lines
+			winningCombinations.add(new int[]{x + 0, x + 3, x + 6});
+		for (int y = 0; y < 3; y++) // Horizontal lines
+			winningCombinations.add(new int[]{y * 3 + 0, y * 3 + 1, y * 3 + 2});
+		winningCombinations.add(new int[]{0, 4, 8}); // Diagonal line 1
+		winningCombinations.add(new int[]{2, 4, 6}); // Diagonal line 2
+		
+		for (int[] comb : winningCombinations)
+			if (checkCombination(comb, player))
+				return GameResult.VICTORY;
+		return GameResult.DRAW;
 	}
 	
+	/**
+	 * Checks whether a given array of 3 integers have the same player as owner.
+	 * If this is the case, true is returned, otherwise, false is returned.
+	 * @param comb the combination of numbers.
+	 * @param player the player that is checked.
+	 * @return true if the 3 integers in the given array have the same owner as
+	 * the given player.
+	 */
+	private boolean checkCombination(int[] comb, Player player) {
+		for (int i = 0; i < 3; i++)
+			if (subGames[comb[i]].getWinner() != player)
+				return false;
+		return true;
+	}
+
+	/**
+	 * Returns the owner of a field, given a subTTTgame and the
+	 * coordinates of the field in that subgame.
+	 * @param subGame the subTTTgame in the TTTx9Game
+	 * @param coord the coordinate of the field
+	 * @return the owner of the field
+	 */
+	public int getOwner(int subGame, Coord coord) {
+		return subGames[subGame].getOwner(coord.getY() * 3 + coord.getX());
+	}
+	
+	public int getOwner(int subGame, int field) {
+		return subGames[subGame].getOwner(field);
+	}
+
+	public void setOwner(int subGame, Coord coord, Player player) {
+		subGames[subGame].setOwner(coord.getY() * 3 + coord.getX(), player);
+	}
+	
+	public void setOWner(int subGame, int field, Player player) {
+		subGames[subGame].setOwner(field, player);
+	}
+
+	public Move getLastMove() {
+		return lastMove;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		
-		
-		
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++)
-				sb.append(printSingleTTTGame(state[i * 3 + j]) + " volgende: ");
-			sb.append("\n\n");
-		}
-		return sb.toString();
-	}
-
-	private String printSingleTTTGame(int[] singleTTT) {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++)
-				sb.append(singleTTT[i * 3 + j] + " ");
+		sb.append(" ------------------------- \n");
+		for (int y = 0; y < 9; y++) {
+			sb.append(" |");
+			for (int ttt = y / 3 * 3; ttt < y / 3 * 3 + 3; ttt++) {
+				for (int x = 0; x < 3; x++) {
+					sb.append(" " + subGames[ttt].getOwner(y % 3 * 3 + x));
+				}
+				sb.append(" |");
+			}
+			if (y % 3 == 2)
+				sb.append("\n -------------------------");
 			sb.append("\n");
 		}
 		return sb.toString();
