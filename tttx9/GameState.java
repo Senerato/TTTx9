@@ -39,11 +39,12 @@ public class GameState {
 		else
 			throw new Error("Illegal move: field does not exists");
 		subGames[move.getSubGame()].checkForWinner(player);
+		System.out.println("gebeurd dit" + move);
 		this.lastMove = move;
 	}
 
 	public boolean isFreeField(Move move) {
-		return getOwner(move.getSubGame(), move.getSingleField()) == 0;
+			return getOwner(move.getSubGame(), move.getSingleField()) == 0;
 	}
 
 	public SubGame[] getState() {
@@ -72,13 +73,13 @@ public class GameState {
 			winningCombinations.add(new int[]{y * 3 + 0, y * 3 + 1, y * 3 + 2});
 		winningCombinations.add(new int[]{0, 4, 8}); // Diagonal line 1
 		winningCombinations.add(new int[]{2, 4, 6}); // Diagonal line 2
-		
+
 		for (int[] comb : winningCombinations)
 			if (checkCombination(comb, player))
 				return GameResult.VICTORY;
 		return GameResult.DRAW;
 	}
-	
+
 	/**
 	 * Checks whether a given array of 3 integers have the same player as owner.
 	 * If this is the case, true is returned, otherwise, false is returned.
@@ -104,7 +105,7 @@ public class GameState {
 	public int getOwner(int subGame, Coord coord) {
 		return subGames[subGame].getOwner(coord.getY() * 3 + coord.getX());
 	}
-	
+
 	public int getOwner(int subGame, int field) {
 		return subGames[subGame].getOwner(field);
 	}
@@ -112,13 +113,22 @@ public class GameState {
 	public void setOwner(int subGame, Coord coord, Player player) {
 		subGames[subGame].setOwner(coord.getY() * 3 + coord.getX(), player);
 	}
-	
+
 	public void setOWner(int subGame, int field, Player player) {
 		subGames[subGame].setOwner(field, player);
 	}
 
 	public Move getLastMove() {
 		return lastMove;
+	}
+
+	/**
+	 * Get the subGame where the next move should be performed.
+	 * @return an integer representation of the subGame where the next move should be performed.
+	 */
+	public int getNextSubGame() {
+		System.out.println("the lastmove: " + lastMove);
+		return lastMove.getSingleField();
 	}
 
 	@Override

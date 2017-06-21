@@ -1,18 +1,16 @@
-Version 0.1.2:
+Version 0.1.3:
 
 Changes:
 
-- Creating a clear GameState representation for the TUI.
-- Other ways of accessing a GameState, for example via a coordinate system.
-- Implementing the rule that a selected box represents the sub-slidingGame
-the next player is going to solve.
-- Input in console for HumanPlayer.
-- Fixed: Winning a field does not do anything.
+- Added exception when an invalid move is submitted in GameState.isFreeField()
+- Added exceptions in Move to prevent illegal moves.
+- Fixed bug: - IteratingAI claims a field that is already in use.
 
 Known bugs:
 
-- IteratingAI claims a field that is already in use.
+- IteratingAI does not function properly
 
 Upcoming features:
 
+- The class Player should probably be an interface.
 - Better separate the model, view and controller.

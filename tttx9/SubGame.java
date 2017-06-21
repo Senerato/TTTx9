@@ -86,4 +86,8 @@ public class SubGame {
 	public Player getWinner() {
 		return winner;
 	}
+
+	public boolean isFreeField(Move move) {
+		return this.getOwner(move.getSingleField()) == 0;
+	}
 }

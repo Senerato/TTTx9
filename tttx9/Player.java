@@ -16,6 +16,10 @@ public class Player {
 		return null;
 	}
 	
+	public Move firstTurn(GameState gs) {
+		return null;
+	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}

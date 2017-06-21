@@ -18,10 +18,12 @@ public class IteratingAI extends Player {
 
 	@Override
 	public Move nextTurn(GameState gs) {
-		for (int i = 0; i < 9; i++)
-			for (int j = 0; j < 9; j++)
-				if (gs.isFreeField(new Move(i, j)))
-					return new Move(i, j);
+		System.out.println("zoeken naar nieuwe move");
+		if (gs.getLastMove() == null)
+			return new Move(0, 0);
+		for (int j = 0; j < 9; j++)
+			if (gs.getState()[gs.getNextSubGame()].isFreeField(new Move(gs.getNextSubGame(), j)))
+				return new Move(gs.getNextSubGame(), j);
 		return null;
 	}
 
