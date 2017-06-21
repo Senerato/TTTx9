@@ -2,7 +2,6 @@ Version 0.1.3:
 
 Changes:
 
-- Added exception when an invalid move is submitted in GameState.isFreeField()
 - Added exceptions in Move to prevent illegal moves.
 - Fixed bug: - IteratingAI claims a field that is already in use.
 
