@@ -8,8 +8,9 @@ import java.util.ArrayList;
  *
  */
 public class SubGame {
-	int[] subGameState = new int[9]; // All fields have an owner, 0 for no owner, 1 for player 1, 2 for player 2.
-	Player winner = null; //The winner of this subGame.
+	private int id; // The id of this subGame.
+	private int[] subGameState = new int[9]; // All fields have an owner, 0 for no owner, 1 for player 1, 2 for player 2.
+	private Player winner = null; //The winner of this subGame.
 
 	public SubGame() {
 		for (int owner: subGameState)
@@ -89,5 +90,13 @@ public class SubGame {
 
 	public boolean isFreeField(Move move) {
 		return this.getOwner(move.getSingleField()) == 0;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getId() {
+		return id;
 	}
 }

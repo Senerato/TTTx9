@@ -7,7 +7,7 @@ import tttx9.Player;
 /**
  * 
  * @author Senerato.
- * An AI that always claims the most left place on the highest 
+ * *Out of date* An AI that always claims the most left place on the highest 
  * possible row.
  */
 public class IteratingAI extends Player {
@@ -22,8 +22,19 @@ public class IteratingAI extends Player {
 		if (gs.getLastMove() == null)
 			return new Move(0, 0);
 		for (int j = 0; j < 9; j++)
-			if (gs.getState()[gs.getNextSubGame()].isFreeField(new Move(gs.getNextSubGame(), j)))
-				return new Move(gs.getNextSubGame(), j);
+			if (gs.getNextSubGame().isFreeField(new Move(gs.getNextSubGame().getId(), j)))
+				return new Move(gs.getNextSubGame().getId(), j);
+		return null;
+	}
+	
+	@Override
+	public Move nextFreeTurn(GameState gs) {
+		System.out.println("zoeken naar een nieuwe vrije move");
+		for (int i = 0; i < 9; i++){
+			for (int j = 0; j < 9; j++){
+				if (gs.getState()[i].isFreeField(new Move(i, j))){
+					System.out.println("het word move: " + new Move(i, j));
+					return new Move(i, j);}}}
 		return null;
 	}
 

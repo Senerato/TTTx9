@@ -18,8 +18,10 @@ public class GameState {
 	private Move lastMove;
 
 	public GameState() {
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < 9; i++) {
 			subGames[i] = new SubGame();
+			subGames[i].setId(i);
+		}
 	}
 
 	/**
@@ -35,7 +37,7 @@ public class GameState {
 			if (isFreeField(move)) // And whether or not the field is free
 				setOwner(subGameMove, new Coord(singleFieldMove % 3, singleFieldMove / 3), player);
 			else
-				throw new Error("Illegal move: field already in use");
+				throw new Error("Illegal move: field already in use (subgame " + subGameMove + " location: " + singleFieldMove + ")");
 		else
 			throw new Error("Illegal move: field does not exists");
 		subGames[move.getSubGame()].checkForWinner(player);
@@ -126,9 +128,9 @@ public class GameState {
 	 * Get the subGame where the next move should be performed.
 	 * @return an integer representation of the subGame where the next move should be performed.
 	 */
-	public int getNextSubGame() {
+	public SubGame getNextSubGame() {
 		System.out.println("the lastmove: " + lastMove);
-		return lastMove.getSingleField();
+		return subGames[lastMove.getSingleField()];
 	}
 
 	@Override

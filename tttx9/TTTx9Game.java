@@ -14,7 +14,7 @@ public class TTTx9Game {
 	private GameState gs;
 	private Player winner;
 	private GameResult gameResult = GameResult.UNFINISHED;
-	
+
 	/**
 	 * Initiate ga game with two players.
 	 * @param p1 player 1.
@@ -29,7 +29,7 @@ public class TTTx9Game {
 		this.gs = new GameState();
 		this.hasTurn = players.get((int) (Math.random() * 2)); // Specifies the player that currently
 	}
-	
+
 	/**
 	 * Play function. Runs the game, giving turns to both players
 	 * while printing the game status.
@@ -50,7 +50,7 @@ public class TTTx9Game {
 	 * moves are exhausted.
 	 */
 	private void checkGameStatus() {	
-			// Check whether the game is finished:
+		// Check whether the game is finished:
 		if (gs.checkForWinner(hasTurn) == GameResult.VICTORY) {
 			this.gameResult = GameResult.VICTORY;
 			this.winner = hasTurn;
@@ -59,7 +59,7 @@ public class TTTx9Game {
 		if (gs.allFieldsTaken())
 			this.gameResult = GameResult.DRAW;
 	}
-	
+
 
 	public GameResult getGameResult() {
 		return this.gameResult;
@@ -81,17 +81,28 @@ public class TTTx9Game {
 	 */
 	private Move nextPlayerMove() {
 		Move nextMove;
-		if (hasTurn.getId() == 1)
-			nextMove = players.get(0).nextTurn(gs);
-		else
-			nextMove = players.get(1).nextTurn(gs);
-		if (gs.getLastMove() != null)
-			nextMove.setSubGame(gs.getLastMove().getSingleField());
+		if (hasTurn.getId() == 1) {
+			if (gs.getLastMove() == null || gs.getNextSubGame().getWinner() != null)
+				nextMove = players.get(0).nextFreeTurn(gs);
+			else
+				nextMove = players.get(0).nextTurn(gs);
+		}
+		else {
+			if (gs.getLastMove() == null || gs.getNextSubGame().getWinner() != null)
+				nextMove = players.get(1).nextFreeTurn(gs);
+			else
+				nextMove = players.get(1).nextTurn(gs);
+		}
+		System.out.println("nextmove is nu: " + nextMove);
+		if (gs.getLastMove() != null) // Set the allowed subgame.
+			if (gs.getNextSubGame().getWinner() == null)
+				nextMove.setSubGame(gs.getLastMove().getSingleField());
+		System.out.println("en de nextmove is nu: " + nextMove);
 		return nextMove;
 	}
 
 	public Player getPlayerTurn() {
 		return this.hasTurn;
 	}
-	
+
 }
