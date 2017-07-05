@@ -1,10 +1,9 @@
-Version 0.1.4:
+Version 0.1.5:
 
 Changes:
 
-- Added exceptions in Move to prevent illegal moves.
-- Fixed bug: - IteratingAI claims a field that is already in use.
-- Fixed bug: - IteratingAI does not function properly
+- Changed class Player to an interface.
+- A easier way to see which player won which subgame.
 
 Known bugs:
 
@@ -14,4 +13,3 @@ Upcoming features:
 
 - The class Player should probably be an interface.
 - Better separate the model, view and controller.
-- A easier way to see which player won which subgame.

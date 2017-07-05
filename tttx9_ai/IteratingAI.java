@@ -10,15 +10,16 @@ import tttx9.Player;
  * *Out of date* An AI that always claims the most left place on the highest 
  * possible row.
  */
-public class IteratingAI extends Player {
-
+public class IteratingAI implements Player {
+	String name;
+	int id;
+	
 	public IteratingAI(String name) {
-		super(name);
+		this.name = name;
 	}
 
 	@Override
 	public Move nextTurn(GameState gs) {
-		System.out.println("zoeken naar nieuwe move");
 		if (gs.getLastMove() == null)
 			return new Move(0, 0);
 		for (int j = 0; j < 9; j++)
@@ -29,13 +30,26 @@ public class IteratingAI extends Player {
 	
 	@Override
 	public Move nextFreeTurn(GameState gs) {
-		System.out.println("zoeken naar een nieuwe vrije move");
-		for (int i = 0; i < 9; i++){
-			for (int j = 0; j < 9; j++){
-				if (gs.getState()[i].isFreeField(new Move(i, j))){
-					System.out.println("het word move: " + new Move(i, j));
-					return new Move(i, j);}}}
+		for (int i = 0; i < 9; i++)
+			for (int j = 0; j < 9; j++)
+				if (gs.isLegalMove(new Move(i, j)))
+					return new Move(i, j);
 		return null;
+	}
+
+	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Override
+	public int getId() {
+		return id;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 
 }

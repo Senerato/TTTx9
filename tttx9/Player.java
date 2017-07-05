@@ -4,13 +4,7 @@ package tttx9;
  * @author Senerato.
  * Player interface, een player is een object dat een gamestate ontvangt en een move teruggeeft.
  */
-public class Player {
-	String name;
-	int id;
-	
-	public Player(String name) {
-		this.name = name;
-	}
+public interface Player {
 	
 	/**
 	 * A player returns a new move given a GameState in which
@@ -20,9 +14,7 @@ public class Player {
 	 * @return a move with only a specific field in a subTTTgame (so without
 	 * a subTTTgame).
 	 */
-	public Move nextTurn(GameState gs) {
-		return null;
-	}
+	public Move nextTurn(GameState gs);
 	
 	/**
 	 * A player returns a new move given a GameState in which the
@@ -31,20 +23,11 @@ public class Player {
 	 * @return a move with both a subTTTgame and a field in that subTTTgame
 	 * specified.
 	 */
-	public Move nextFreeTurn(GameState gs) {
-		return null;
-	}
+	public Move nextFreeTurn(GameState gs);
 	
-	public void setId(int id) {
-		this.id = id;
-	}
+	public void setId(int id);
 	
-	public int getId() {
-		return id;
-	}
+	public int getId();
 	
-	@Override
-	public String toString() {
-		return name;
-	}
+	public String toString();
 }

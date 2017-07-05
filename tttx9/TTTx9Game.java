@@ -93,11 +93,9 @@ public class TTTx9Game {
 			else
 				nextMove = players.get(1).nextTurn(gs);
 		}
-		System.out.println("nextmove is nu: " + nextMove);
-		if (gs.getLastMove() != null) // Set the allowed subgame.
-			if (gs.getNextSubGame().getWinner() == null)
+		if (gs.getLastMove() != null) // Set the allowed subgame. (In the first move, everything is allowed).
+			if (gs.getNextSubGame().getWinner() == null) // If the subgame is not won, the move has to be the SingleField move of the previous move.
 				nextMove.setSubGame(gs.getLastMove().getSingleField());
-		System.out.println("en de nextmove is nu: " + nextMove);
 		return nextMove;
 	}
 

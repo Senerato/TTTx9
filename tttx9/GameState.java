@@ -33,20 +33,28 @@ public class GameState {
 	public void submitMove(Move move, Player player) {
 		int subGameMove = move.getSubGame();
 		int singleFieldMove = move.getSingleField();
-		if (subGameMove >= 0 && subGameMove < 9 && singleFieldMove >= 0 && singleFieldMove < 9) // Check whether the move is legal
-			if (isFreeField(move)) // And whether or not the field is free
-				setOwner(subGameMove, new Coord(singleFieldMove % 3, singleFieldMove / 3), player);
+		if (subGames[subGameMove].getWinner() == null) { // Throw an error if the subGame is already won.
+			if (subGameMove >= 0 && subGameMove < 9 && singleFieldMove >= 0 && singleFieldMove < 9) {// Check whether the move is legal
+				if (isFreeField(move)) // And whether or not the field is free
+					setOwner(subGameMove, new Coord(singleFieldMove % 3, singleFieldMove / 3), player);
+				else
+					throw new Error("Illegal move: field already in use (subgame " + subGameMove + " location: " + singleFieldMove + ")");
+			}
 			else
-				throw new Error("Illegal move: field already in use (subgame " + subGameMove + " location: " + singleFieldMove + ")");
+				throw new Error("Illegal move: field does not exists");
+		}
 		else
-			throw new Error("Illegal move: field does not exists");
+			throw new Error("Illegal move: subGame already won");
 		subGames[move.getSubGame()].checkForWinner(player);
-		System.out.println("gebeurd dit" + move);
 		this.lastMove = move;
 	}
 
+	public boolean isLegalMove(Move move) {
+		return isFreeField(move) && subGames[move.getSubGame()].getWinner() == null;
+	}
+	
 	public boolean isFreeField(Move move) {
-			return getOwner(move.getSubGame(), move.getSingleField()) == 0;
+		return getOwner(move.getSubGame(), move.getSingleField()) == 0;
 	}
 
 	public SubGame[] getState() {
@@ -129,7 +137,6 @@ public class GameState {
 	 * @return an integer representation of the subGame where the next move should be performed.
 	 */
 	public SubGame getNextSubGame() {
-		System.out.println("the lastmove: " + lastMove);
 		return subGames[lastMove.getSingleField()];
 	}
 
@@ -141,7 +148,10 @@ public class GameState {
 			sb.append(" |");
 			for (int ttt = y / 3 * 3; ttt < y / 3 * 3 + 3; ttt++) {
 				for (int x = 0; x < 3; x++) {
-					sb.append(" " + subGames[ttt].getOwner(y % 3 * 3 + x));
+					if (subGames[ttt].getWinner() == null)
+						sb.append(" " + subGames[ttt].getOwner(y % 3 * 3 + x));
+					else
+						sb.append(" " + subGames[ttt].getWinner().getId());
 				}
 				sb.append(" |");
 			}
