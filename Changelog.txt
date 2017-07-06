@@ -1,9 +1,8 @@
-Version 0.1.5:
+Version 0.1.5 -> 0.1.6:
 
 Changes:
 
-- Changed class Player to an interface.
-- A easier way to see which player won which subgame.
+
 
 Known bugs:
 
@@ -13,3 +12,4 @@ Upcoming features:
 
 - The class Player should probably be an interface.
 - Better separate the model, view and controller.
+- Implement correct behaviour when a subgame ends in a draw.
