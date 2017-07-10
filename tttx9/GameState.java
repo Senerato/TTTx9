@@ -53,7 +53,7 @@ public class GameState {
 		return isFreeField(move) && subGames[move.getSubGame()].getWinner() == null;
 	}
 	
-	public boolean isFreeField(Move move) {
+	private boolean isFreeField(Move move) {
 		return getOwner(move.getSubGame(), move.getSingleField()) == 0;
 	}
 
@@ -148,8 +148,12 @@ public class GameState {
 			sb.append(" |");
 			for (int ttt = y / 3 * 3; ttt < y / 3 * 3 + 3; ttt++) {
 				for (int x = 0; x < 3; x++) {
-					if (subGames[ttt].getWinner() == null)
-						sb.append(" " + subGames[ttt].getOwner(y % 3 * 3 + x));
+					if (subGames[ttt].getWinner() == null) {
+						if (!new Move(x, y).equals(lastMove))
+							sb.append(" " + subGames[ttt].getOwner(y % 3 * 3 + x));
+						else
+							sb.append("-" + subGames[ttt].getOwner(y % 3 * 3 + x));
+					}
 					else
 						sb.append(" " + subGames[ttt].getWinner().getId());
 				}

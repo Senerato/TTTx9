@@ -66,6 +66,13 @@ public class Move {
 		else
 			throw new IllegalArgumentException("Impossible move: the field does not exists in a TTT field");
 	}
+	
+	public void setSingleField(int singleField) {
+		if (singleField >= 0 && singleField < 9)
+			this.singleField = singleField;
+		else
+			throw new IllegalArgumentException("Impossible move: the field does not exists in a TTT subGame");
+	}
 
 	/**
 	 * Get a Coord representation of the singleField in a TTT game where this move refers to.
@@ -73,6 +80,16 @@ public class Move {
 	 */
 	public Coord getSingleFieldCoord() {
 		return new Coord(singleField);
+	}
+	
+	@Override
+	public boolean equals(Object z) {
+		if (this.getClass() != z.getClass())
+			return false;
+		else {
+			Move zMove = (Move) z;
+			return subGame == zMove.getSubGame() && singleField == zMove.getSingleField();
+		}
 	}
 
 	@Override

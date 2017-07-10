@@ -10,6 +10,5 @@ Known bugs:
 
 Upcoming features:
 
-- The class Player should probably be an interface.
 - Better separate the model, view and controller.
 - Implement correct behaviour when a subgame ends in a draw.
