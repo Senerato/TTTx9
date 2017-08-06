@@ -8,8 +8,8 @@ import java.util.Scanner;
  *
  */
 public class HumanPlayer implements Player {
-	String name;
-	int id;
+	private String name;
+	private int id;
 	
 	Scanner scanner = new Scanner(System.in);
 

@@ -2,11 +2,14 @@ Version 0.1.5 -> 0.1.6:
 
 Changes:
 
-f
+
 
 Known bugs:
 
-
+- The dashes that should point out new moves do not work properly.
+- If a subgame ends in a draw, and a player has to submit a move in that
+subgame, a nullpointer will occur. There is no winner in the subgame, so
+a move has to be performed in the subgame, which is illegal.
 
 Upcoming features:
 

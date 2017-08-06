@@ -73,6 +73,14 @@ public class TTTx9Game {
 		gs.submitMove(nextMove, hasTurn);
 		view.updateUi(this, gs);
 	}
+	
+	/**
+	 * A function that should be called by a Player to submit the
+	 * move the Player wants to perform.
+	 */
+	public void submitPlayerTurn(Move move) {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * Gives another player a turn and returns the turn that player

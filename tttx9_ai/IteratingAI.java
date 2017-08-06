@@ -11,8 +11,8 @@ import tttx9.Player;
  * possible row.
  */
 public class IteratingAI implements Player {
-	String name;
-	int id;
+	private String name;
+	private int id;
 	
 	public IteratingAI(String name) {
 		this.name = name;

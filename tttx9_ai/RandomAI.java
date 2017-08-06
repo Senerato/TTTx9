@@ -6,8 +6,8 @@ import tttx9.Player;
 import tttx9.Util;
 
 public class RandomAI implements Player {
-	String name;
-	int id;
+	private String name;
+	private int id;
 
 	public RandomAI(String name) {
 		this.name = name;
