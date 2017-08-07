@@ -32,11 +32,11 @@ public class HumanPlayer implements Player {
 	public Move nextFreeTurn(GameState gs) {
 		Move m;
 		System.out.println("Please give a subTTTgame in which you want to start:");
-		int subGame = scanner.nextInt();
+		int subgame = scanner.nextInt();
 		System.out.println("Please give a number ranging from 0 to 8, where 0 is the most left number,"
 				+ "\n1 is one place to the right and 8 is the most right lowest location.");
 		int pos = scanner.nextInt();
-		m = new Move(subGame, pos);
+		m = new Move(subgame, pos);
 		return m;
 	}
 

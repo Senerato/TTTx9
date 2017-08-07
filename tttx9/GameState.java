@@ -14,13 +14,13 @@ import java.util.ArrayList;
  * 2: Field belonging to player 2.
  */
 public class GameState {
-	private SubGame[] subGames = new SubGame[9];
+	private Subgame[] subgames = new Subgame[9];
 	private Move lastMove;
 
 	public GameState() {
 		for (int i = 0; i < 9; i++) {
-			subGames[i] = new SubGame();
-			subGames[i].setId(i);
+			subgames[i] = new Subgame();
+			subgames[i].setId(i);
 		}
 	}
 
@@ -31,46 +31,54 @@ public class GameState {
 	 * @param playerId the player that performs the move.
 	 */
 	public void submitMove(Move move, Player player) {
-		int subGameMove = move.getSubGame();
+		int subgameMove = move.getSubGame();
 		int singleFieldMove = move.getSingleField();
-		if (subGames[subGameMove].getWinner() == null) { // Throw an error if the subGame is already won.
-			if (subGameMove >= 0 && subGameMove < 9 && singleFieldMove >= 0 && singleFieldMove < 9) {// Check whether the move is legal
+		if (subgames[subgameMove].getSubgameResult() == GameResult.UNFINISHED) { // Throw an error if the subgame is already won.
+			if (subgameMove >= 0 && subgameMove < 9 && singleFieldMove >= 0 && singleFieldMove < 9) {// Check whether the move is legal
 				if (isFreeField(move)) // And whether or not the field is free
-					setOwner(subGameMove, new Coord(singleFieldMove % 3, singleFieldMove / 3), player);
+					setOwner(subgameMove, new Coord(singleFieldMove % 3, singleFieldMove / 3), player);
 				else
-					throw new Error("Illegal move: field already in use (subgame " + subGameMove + " location: " + singleFieldMove + ")");
+					throw new Error("Illegal move: field already in use (subgame " + subgameMove + " location: " + singleFieldMove + ")");
 			}
 			else
 				throw new Error("Illegal move: field does not exists");
 		}
 		else
-			throw new Error("Illegal move: subGame already won");
+			throw new Error("Illegal move: subgame already won");
 		this.lastMove = move;
 	}
 
+	/**
+	 * Check whether it is possible to claim the specified field in the specified subgame.
+	 * @param move: The move that is questioned to be legal
+	 * @return: true if the move is possible, false otherwise.
+	 */
 	public boolean isLegalMove(Move move) {
-		return isFreeField(move) && subGames[move.getSubGame()].getWinner() == null;
+		return isFreeField(move) && subgames[move.getSubGame()].getSubgameResult() == GameResult.UNFINISHED;
 	}
 	
 	private boolean isFreeField(Move move) {
 		return getOwner(move.getSubGame(), move.getSingleField()) == 0;
 	}
 
-	public SubGame[] getState() {
-		return this.subGames;
+	/**
+	 * Get all subgames of the game. Subgames hold information
+	 * about their fields and winners.
+	 * @return an array of the 9 subgames in the game.
+	 */
+	public Subgame[] getSubgames() {
+		return this.subgames;
 	}
 
 	/**
-	 * A function that checks whether all fields in a GameState
-	 * are taken.
-	 * @return true if all fields in the game are taken, false
+	 * A function that checks whether all subgames have ended.
+	 * @return true if all subgames have ended, false
 	 * otherwise.
 	 */
-	public boolean allFieldsTaken() {
-		for (int i = 0; i < 9; i++)
-			for (int j = 0; j < 9; j++)
-				if (isFreeField(new Move(i, j)))
-					return false;
+	public boolean allSubGamesEnded() {
+		for (Subgame subgame : subgames)
+			if (subgame.getSubgameResult() == GameResult.UNFINISHED)
+				return false;
 		return true;
 	}
 
@@ -99,7 +107,7 @@ public class GameState {
 	 */
 	private boolean checkCombination(int[] comb, Player player) {
 		for (int i = 0; i < 3; i++)
-			if (subGames[comb[i]].getWinner() != player)
+			if (subgames[comb[i]].getWinner() != player)
 				return false;
 		return true;
 	}
@@ -107,36 +115,41 @@ public class GameState {
 	/**
 	 * Returns the owner of a field, given a subTTTgame and the
 	 * coordinates of the field in that subgame.
-	 * @param subGame the subTTTgame in the TTTx9Game
+	 * @param subgame the subTTTgame in the TTTx9Game
 	 * @param coord the coordinate of the field
 	 * @return the owner of the field
 	 */
-	public int getOwner(int subGame, Coord coord) {
-		return subGames[subGame].getOwner(coord.getY() * 3 + coord.getX());
+	public int getOwner(int subgame, Coord coord) {
+		return subgames[subgame].getOwner(coord.getY() * 3 + coord.getX());
 	}
 
-	public int getOwner(int subGame, int field) {
-		return subGames[subGame].getOwner(field);
+	public int getOwner(int subgame, int field) {
+		return subgames[subgame].getOwner(field);
 	}
 
-	public void setOwner(int subGame, Coord coord, Player player) {
-		subGames[subGame].setOwner(coord.getY() * 3 + coord.getX(), player);
+	public void setOwner(int subgame, Coord coord, Player player) {
+		subgames[subgame].setOwner(coord.getY() * 3 + coord.getX(), player);
 	}
 
-	public void setOWner(int subGame, int field, Player player) {
-		subGames[subGame].setOwner(field, player);
+	public void setOwner(int subgame, int field, Player player) {
+		subgames[subgame].setOwner(field, player);
 	}
 
+	/**
+	 * Get the last move that is performed. This the move the other player
+	 * performed last.
+	 * @return: the previous move performed in the game.
+	 */
 	public Move getLastMove() {
 		return lastMove;
 	}
 
 	/**
-	 * Get the subGame where the next move should be performed.
-	 * @return an integer representation of the subGame where the next move should be performed.
+	 * Get the subgame where the next move should be performed.
+	 * @return an integer representation of the subgame where the next move should be performed.
 	 */
-	public SubGame getNextSubGame() {
-		return subGames[lastMove.getSingleField()];
+	public Subgame getNextSubGame() {
+		return subgames[lastMove.getSingleField()];
 	}
 
 	@Override
@@ -147,14 +160,14 @@ public class GameState {
 			sb.append(" |");
 			for (int ttt = y / 3 * 3; ttt < y / 3 * 3 + 3; ttt++) {
 				for (int x = 0; x < 3; x++) {
-					if (subGames[ttt].getWinner() == null) {
-						if (!new Move(x, y).equals(lastMove))
-							sb.append(" " + subGames[ttt].getOwner(y % 3 * 3 + x));
+					if (subgames[ttt].getWinner() == null) {
+						if (!new Move(ttt, y % 3 * 3 + x).equals(lastMove))
+							sb.append(" " + subgames[ttt].getOwner(y % 3 * 3 + x));
 						else
-							sb.append("-" + subGames[ttt].getOwner(y % 3 * 3 + x));
+							sb.append(">" + subgames[ttt].getOwner(y % 3 * 3 + x));
 					}
 					else
-						sb.append(" " + subGames[ttt].getWinner().getId());
+						sb.append(" " + subgames[ttt].getWinner().getId());
 				}
 				sb.append(" |");
 			}

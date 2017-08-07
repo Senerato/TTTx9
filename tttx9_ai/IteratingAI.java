@@ -1,5 +1,6 @@
 package tttx9_ai;
 
+import tttx9.GameResult;
 import tttx9.GameState;
 import tttx9.Move;
 import tttx9.Player;
@@ -56,7 +57,7 @@ public class IteratingAI implements Player {
 	@Override
 	public Move getMove(TTTx9Game ttt, GameState gs) {
 		Move nextMove;
-		if (gs.getLastMove() == null || gs.getNextSubGame().getWinner() != null)
+		if (gs.getLastMove() == null || gs.getNextSubGame().getSubgameResult() != GameResult.UNFINISHED)
 			nextMove = nextFreeTurn(gs);
 		else
 			nextMove = nextTurn(gs);

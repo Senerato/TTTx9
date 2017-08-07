@@ -8,18 +8,18 @@ package tttx9;
  * and a singleField, a field in a subgame.
  */
 public class Move {
-	private int subGame = -1;
+	private int subgame = -1;
 	private int singleField = -1;
 
 	/**
-	 * @param subGame one of the nine subgames present in a TTTx9 game
+	 * @param subgame one of the nine subgames present in a TTTx9 game
 	 * that consists of 9 singleFields.
 	 * @param singleField a singleField, a field in a subgame.
 	 */
-	public Move(int subGame, int singleField) {
-		if (subGame >= 0 && subGame < 9) {
+	public Move(int subgame, int singleField) {
+		if (subgame >= 0 && subgame < 9) {
 			if (singleField >= 0 && singleField < 9) {
-				this.subGame = subGame;
+				this.subgame = subgame;
 				this.singleField = singleField;
 			}
 			else
@@ -41,11 +41,11 @@ public class Move {
 	}
 
 	/**
-	 * Get the subGame where this Move refers to.
-	 * @return the subGame this move refers to.
+	 * Get the subgame where this Move refers to.
+	 * @return the subgame this move refers to.
 	 */
 	public int getSubGame() {
-		return subGame;
+		return subgame;
 	}
 
 	/**
@@ -58,11 +58,11 @@ public class Move {
 
 	/**
 	 * Set the subgame where this Move refers to. Throws an exeption if the field does not exists.
-	 * @param subGame a field (which is larger or equal to 0 and smaller than 9).
+	 * @param subgame a field (which is larger or equal to 0 and smaller than 9).
 	 */
-	public void setSubGame(int subGame) {
-		if (subGame >= 0 && subGame < 9)
-			this.subGame = subGame;
+	public void setSubGame(int subgame) {
+		if (subgame >= 0 && subgame < 9)
+			this.subgame = subgame;
 		else
 			throw new IllegalArgumentException("Impossible move: the field does not exists in a TTT field");
 	}
@@ -71,7 +71,7 @@ public class Move {
 		if (singleField >= 0 && singleField < 9)
 			this.singleField = singleField;
 		else
-			throw new IllegalArgumentException("Impossible move: the field does not exists in a TTT subGame");
+			throw new IllegalArgumentException("Impossible move: the field does not exists in a TTT subgame");
 	}
 
 	/**
@@ -88,12 +88,12 @@ public class Move {
 			return false;
 		else {
 			Move zMove = (Move) z;
-			return subGame == zMove.getSubGame() && singleField == zMove.getSingleField();
+			return subgame == zMove.getSubGame() && singleField == zMove.getSingleField();
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "Subgame: " + subGame + " singleField: " + singleField + ".";
+		return "Subgame: " + subgame + " singleField: " + singleField + ".";
 	}
 }

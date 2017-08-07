@@ -8,7 +8,6 @@ import java.util.ArrayList;
  * Het model: ontvangt een player en managed de zetten.
  */
 public class TTTx9Game {
-	private View view;
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private Player hasTurn;
 	private GameState gs;
@@ -20,8 +19,7 @@ public class TTTx9Game {
 	 * @param p1 player 1.
 	 * @param p2 player 2.
 	 */
-	public TTTx9Game(View view, Player p1, Player p2) {
-		this.view = view;
+	public TTTx9Game(Player p1, Player p2) {
 		p1.setId(1);
 		p2.setId(2);
 		this.players.add(p1);
@@ -31,15 +29,20 @@ public class TTTx9Game {
 	}
 
 	/**
-	 * Play function. Runs an AI game, giving turns to both players
-	 * while printing the game status.
+	 * Play function. Runs an AI game, giving turns to both players.
+	 * This function shows the gamestate in the console if true is given as parameter.
+	 * @param showGameStateInfo: shows information about the game when true.
 	 */
-	public void play() {
+	public void play(boolean showGameStateInfo) {
 		
 		while (gameResult == GameResult.UNFINISHED) {
-			System.out.println(hasTurn + " performs turn");
 			Move nextMove = hasTurn.getMove(this, gs); // Get a move from the current player.
 			submitPlayerMove(nextMove);
+			if (showGameStateInfo) {
+				System.out.println(players.get(hasTurn.getId() % 2) + " performs turn" + "\n" + gs);
+				if (gameResult == GameResult.WON)
+					System.out.println(winner + " won the game!");
+			}
 		}
 	}
 
@@ -53,9 +56,8 @@ public class TTTx9Game {
 		if (gs.checkForWinner(hasTurn) == GameResult.WON) {
 			this.gameResult = GameResult.WON;
 			this.winner = hasTurn;
-			System.out.println(winner + " won the game!");
 		}
-		if (gs.allFieldsTaken())
+		if (gs.allSubGamesEnded())
 			this.gameResult = GameResult.DRAW;
 	}
 
@@ -73,7 +75,6 @@ public class TTTx9Game {
 				nextMove.setSubGame(gs.getLastMove().getSingleField());
 		gs.submitMove(nextMove, hasTurn);
 		checkGameStatus();
-		view.updateUi(this, gs); // TODO: incorrect MVC pattern.
 		hasTurn = players.get(hasTurn.getId() % 2);
 	}
 

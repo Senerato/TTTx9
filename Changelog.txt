@@ -1,15 +1,23 @@
-Version 0.1.5 -> 0.1.6:
+Version 0.1.6:
 
 Changes:
 
 - Changed the program to be more of a standalone model.
+- Added more javadoc.
+- Added the ExampleAI.
+- Removed the View and Controller classes since they don't fit in the new
+idea of a standalone model.
+- Changed all uses of "subGame" in the project to "subgame".
+- Fixed bug: - The dashes that should point out new moves do not work properly.
+- Fixed bug: - If a subgame ends in a draw, and a player has to submit a move in that
+subgame, a nullpointer will occur. There is no winner in the subgame, so
+a move has to be performed in the subgame, which is illegal.
+- Fixed bug: the game did not finish when it ended in a draw, resulting in a
+nullpointer.
 
 Known bugs:
 
-- The dashes that should point out new moves do not work properly.
-- If a subgame ends in a draw, and a player has to submit a move in that
-subgame, a nullpointer will occur. There is no winner in the subgame, so
-a move has to be performed in the subgame, which is illegal.
+
 
 Upcoming features:
 

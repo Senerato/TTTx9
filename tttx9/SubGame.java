@@ -7,24 +7,24 @@ import java.util.ArrayList;
  * @author Senerato.
  *
  */
-public class SubGame {
-	private int id; // The id of this subGame.
-	private int[] subGameOwners = new int[9]; // All fields have an owner, 0 for no owner, 1 for player 1, 2 for player 2.
-	private Player winner = null; //The winner of this subGame.
-	private GameResult subGameResult;
+public class Subgame {
+	private int id; // The id of this subgame.
+	private int[] subgameOwners = new int[9]; // All fields have an owner, 0 for no owner, 1 for player 1, 2 for player 2.
+	private Player winner = null; //The winner of this subgame.
+	private GameResult subgameResult = GameResult.UNFINISHED;
 
-	public SubGame() {
-		for (int owner: subGameOwners)
+	public Subgame() {
+		for (int owner: subgameOwners)
 			owner = 0;
 	}
 	
 	/**
-	 * Retrieve the result of the subGame: whether the game is 
+	 * Retrieve the result of the subgame: whether the game is 
 	 * unfinished, ended in a draw, or is won by either player.
 	 * @return a GameResult representing the result of the subgame.
 	 */
 	public GameResult getSubgameResult() {
-		return this.subGameResult;
+		return this.subgameResult;
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class SubGame {
 	 * @return an array with field 0 to 8 representing its owner.
 	 */
 	public int[] getSubGameOwners() {
-		return subGameOwners;
+		return subgameOwners;
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class SubGame {
 	 * @return the owner of the specified field
 	 */
 	public int getOwner(int field) {
-		return subGameOwners[field];
+		return subgameOwners[field];
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class SubGame {
 	 * @return the owner of the specified field
 	 */
 	public int getOwner(Coord coord) {
-		return subGameOwners[coord.getY() / 3 * 3 + coord.getX()];
+		return subgameOwners[coord.getY() / 3 * 3 + coord.getX()];
 	}
 
 	/**
@@ -62,13 +62,13 @@ public class SubGame {
 	 * field.
 	 */
 	public void setOwner(int field, Player newOwner) {
-		subGameOwners[field] = newOwner.getId();
+		subgameOwners[field] = newOwner.getId();
 		if (checkIsWon(newOwner)) {
 			this.winner = newOwner;
-			this.subGameResult = GameResult.WON;
+			this.subgameResult = GameResult.WON;
 		}
 		if (checkEndedInDraw())
-			this.subGameResult = GameResult.DRAW;
+			this.subgameResult = GameResult.DRAW;
 	}
 
 	/**
@@ -76,14 +76,14 @@ public class SubGame {
 	 * @return true if the game ended in a draw, false otherwise.
 	 */
 	private boolean checkEndedInDraw() {
-		for (int singleField : subGameOwners)
+		for (int singleField : subgameOwners)
 			if (singleField == 0)
 				return false;
 		return true;
 	}
 
 	/**
-	 * Checks whether there is a winner in the subGame, if that is the
+	 * Checks whether there is a winner in the subgame, if that is the
 	 * case, the function returns true, false otherwise.
 	 * @return true if there is a winner, false otherwise.
 	 */
@@ -112,23 +112,42 @@ public class SubGame {
 	 */
 	private boolean checkCombination(int[] comb, Player player) {
 		for (int i = 0; i < 3; i++)
-			if (subGameOwners[comb[i]] != player.getId())
+			if (subgameOwners[comb[i]] != player.getId())
 				return false;
 		return true;
 	}
 
+	/**
+	 * Get the winner of this specific subgame.
+	 * @return the winner of this subgame.
+	 */
 	public Player getWinner() {
 		return winner;
 	}
 
+	
+	/**
+	 * Check whether the move that is given is performed in a free field (a field
+	 * that is not already claimed).
+	 * @param move: A move that specifies a specific field in the subgame.
+	 * @return true if the field is not yet claimed, false otherwise.
+	 */
 	public boolean isFreeField(Move move) {
 		return this.getOwner(move.getSingleField()) == 0;
 	}
 
+	/**
+	 * Set the id of the subgame.
+	 * @param id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 	
+	/**
+	 * Get the id of this subgame.
+	 * @return
+	 */
 	public int getId() {
 		return id;
 	}
