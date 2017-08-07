@@ -9,16 +9,31 @@ import java.util.ArrayList;
  */
 public class SubGame {
 	private int id; // The id of this subGame.
-	private int[] subGameState = new int[9]; // All fields have an owner, 0 for no owner, 1 for player 1, 2 for player 2.
+	private int[] subGameOwners = new int[9]; // All fields have an owner, 0 for no owner, 1 for player 1, 2 for player 2.
 	private Player winner = null; //The winner of this subGame.
+	private GameResult subGameResult;
 
 	public SubGame() {
-		for (int owner: subGameState)
+		for (int owner: subGameOwners)
 			owner = 0;
 	}
+	
+	/**
+	 * Retrieve the result of the subGame: whether the game is 
+	 * unfinished, ended in a draw, or is won by either player.
+	 * @return a GameResult representing the result of the subgame.
+	 */
+	public GameResult getSubgameResult() {
+		return this.subGameResult;
+	}
 
-	public int[] getSubGameStates() {
-		return subGameState;
+	/**
+	 * Get a list of all the fields in this subgame with their owners.
+	 * 0 represents neutral, 1 represents player 1, 2 represents player 2.
+	 * @return an array with field 0 to 8 representing its owner.
+	 */
+	public int[] getSubGameOwners() {
+		return subGameOwners;
 	}
 
 	/**
@@ -27,7 +42,7 @@ public class SubGame {
 	 * @return the owner of the specified field
 	 */
 	public int getOwner(int field) {
-		return subGameState[field];
+		return subGameOwners[field];
 	}
 
 	/**
@@ -37,7 +52,7 @@ public class SubGame {
 	 * @return the owner of the specified field
 	 */
 	public int getOwner(Coord coord) {
-		return subGameState[coord.getY() / 3 * 3 + coord.getX()];
+		return subGameOwners[coord.getY() / 3 * 3 + coord.getX()];
 	}
 
 	/**
@@ -47,7 +62,24 @@ public class SubGame {
 	 * field.
 	 */
 	public void setOwner(int field, Player newOwner) {
-		subGameState[field] = newOwner.getId();
+		subGameOwners[field] = newOwner.getId();
+		if (checkIsWon(newOwner)) {
+			this.winner = newOwner;
+			this.subGameResult = GameResult.WON;
+		}
+		if (checkEndedInDraw())
+			this.subGameResult = GameResult.DRAW;
+	}
+
+	/**
+	 * Checks whether or not the game has ended in a draw.
+	 * @return true if the game ended in a draw, false otherwise.
+	 */
+	private boolean checkEndedInDraw() {
+		for (int singleField : subGameOwners)
+			if (singleField == 0)
+				return false;
+		return true;
 	}
 
 	/**
@@ -55,7 +87,7 @@ public class SubGame {
 	 * case, the function returns true, false otherwise.
 	 * @return true if there is a winner, false otherwise.
 	 */
-	public void checkForWinner(Player player) {
+	private boolean checkIsWon(Player player) {
 		ArrayList<int[]> winningCombinations = new ArrayList<int[]>();
 		for (int x = 0; x < 3; x++) // Vertical lines
 			winningCombinations.add(new int[]{x + 0, x + 3, x + 6});
@@ -66,7 +98,8 @@ public class SubGame {
 		
 		for (int[] comb : winningCombinations)
 			if (checkCombination(comb, player))
-				this.winner = player;
+				return true;
+		return false;
 	}
 	
 	/**
@@ -79,7 +112,7 @@ public class SubGame {
 	 */
 	private boolean checkCombination(int[] comb, Player player) {
 		for (int i = 0; i < 3; i++)
-			if (subGameState[comb[i]] != player.getId())
+			if (subGameOwners[comb[i]] != player.getId())
 				return false;
 		return true;
 	}

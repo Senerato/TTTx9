@@ -6,7 +6,7 @@ package tttx9;
  *
  */
 public enum GameResult {
-	UNFINISHED, DRAW, VICTORY;
+	UNFINISHED, DRAW, WON;
 
 	public static GameResult values(int playerId) {
 		

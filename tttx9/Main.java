@@ -17,8 +17,6 @@ public class Main {
 		Player player2 = new IteratingAI("Iterating AI2");
 		//Player player2 = new HumanPlayer("Human player");
 		TTTx9Game ttt = new TTTx9Game(view, player1, player2);
-		Controller controller = new Controller(ttt, view);
 		ttt.play();
 	}
-
 }

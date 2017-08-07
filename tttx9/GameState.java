@@ -45,7 +45,6 @@ public class GameState {
 		}
 		else
 			throw new Error("Illegal move: subGame already won");
-		subGames[move.getSubGame()].checkForWinner(player);
 		this.lastMove = move;
 	}
 
@@ -86,7 +85,7 @@ public class GameState {
 
 		for (int[] comb : winningCombinations)
 			if (checkCombination(comb, player))
-				return GameResult.VICTORY;
+				return GameResult.WON;
 		return GameResult.DRAW;
 	}
 

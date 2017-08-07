@@ -16,7 +16,7 @@ public class TTTx9Game {
 	private GameResult gameResult = GameResult.UNFINISHED;
 
 	/**
-	 * Initiate ga game with two players.
+	 * Initiate a game with two players.
 	 * @param p1 player 1.
 	 * @param p2 player 2.
 	 */
@@ -31,17 +31,16 @@ public class TTTx9Game {
 	}
 
 	/**
-	 * Play function. Runs the game, giving turns to both players
+	 * Play function. Runs an AI game, giving turns to both players
 	 * while printing the game status.
 	 */
 	public void play() {
-		while(gameResult == GameResult.UNFINISHED) {
+		
+		while (gameResult == GameResult.UNFINISHED) {
 			System.out.println(hasTurn + " performs turn");
-			performTurn();
-			checkGameStatus();
-			hasTurn = players.get(hasTurn.getId() % 2);
+			Move nextMove = hasTurn.getMove(this, gs); // Get a move from the current player.
+			submitPlayerMove(nextMove);
 		}
-		//printGameSummary();
 	}
 
 	/**
@@ -49,10 +48,10 @@ public class TTTx9Game {
 	 * due to a player winning the game or because all possible
 	 * moves are exhausted.
 	 */
-	private void checkGameStatus() {	
+	private void checkGameStatus() {
 		// Check whether the game is finished:
-		if (gs.checkForWinner(hasTurn) == GameResult.VICTORY) {
-			this.gameResult = GameResult.VICTORY;
+		if (gs.checkForWinner(hasTurn) == GameResult.WON) {
+			this.gameResult = GameResult.WON;
 			this.winner = hasTurn;
 			System.out.println(winner + " won the game!");
 		}
@@ -60,51 +59,22 @@ public class TTTx9Game {
 			this.gameResult = GameResult.DRAW;
 	}
 
-
 	public GameResult getGameResult() {
 		return this.gameResult;
 	}
 
 	/**
-	 * Performs a turn.
-	 */
-	private void performTurn() {
-		Move nextMove = nextPlayerMove();
-		gs.submitMove(nextMove, hasTurn);
-		view.updateUi(this, gs);
-	}
-	
-	/**
 	 * A function that should be called by a Player to submit the
 	 * move the Player wants to perform.
 	 */
-	public void submitPlayerTurn(Move move) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Gives another player a turn and returns the turn that player
-	 * performs.
-	 * @return the move the next player performs
-	 */
-	private Move nextPlayerMove() {
-		Move nextMove;
-		if (hasTurn.getId() == 1) {
-			if (gs.getLastMove() == null || gs.getNextSubGame().getWinner() != null)
-				nextMove = players.get(0).nextFreeTurn(gs);
-			else
-				nextMove = players.get(0).nextTurn(gs);
-		}
-		else {
-			if (gs.getLastMove() == null || gs.getNextSubGame().getWinner() != null)
-				nextMove = players.get(1).nextFreeTurn(gs);
-			else
-				nextMove = players.get(1).nextTurn(gs);
-		}
+	public void submitPlayerMove(Move nextMove) {
 		if (gs.getLastMove() != null) // Set the allowed subgame. (In the first move, everything is allowed).
-			if (gs.getNextSubGame().getWinner() == null) // If the subgame is not won, the move has to be the SingleField move of the previous move.
+			if (gs.getNextSubGame().getSubgameResult() == GameResult.UNFINISHED) // If the subgame is unfinished, the move has to be the SingleField move of the previous move.
 				nextMove.setSubGame(gs.getLastMove().getSingleField());
-		return nextMove;
+		gs.submitMove(nextMove, hasTurn);
+		checkGameStatus();
+		view.updateUi(this, gs); // TODO: incorrect MVC pattern.
+		hasTurn = players.get(hasTurn.getId() % 2);
 	}
 
 	public Player getPlayerTurn() {

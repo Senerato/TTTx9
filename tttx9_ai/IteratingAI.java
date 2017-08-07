@@ -3,6 +3,7 @@ package tttx9_ai;
 import tttx9.GameState;
 import tttx9.Move;
 import tttx9.Player;
+import tttx9.TTTx9Game;
 
 /**
  * 
@@ -50,6 +51,16 @@ public class IteratingAI implements Player {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public Move getMove(TTTx9Game ttt, GameState gs) {
+		Move nextMove;
+		if (gs.getLastMove() == null || gs.getNextSubGame().getWinner() != null)
+			nextMove = nextFreeTurn(gs);
+		else
+			nextMove = nextTurn(gs);
+		return nextMove;
 	}
 
 }

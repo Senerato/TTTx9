@@ -25,6 +25,8 @@ public interface Player {
 	 */
 	public Move nextFreeTurn(GameState gs);
 	
+	public Move getMove(TTTx9Game ttt, GameState gs);
+	
 	public void setId(int id);
 	
 	public int getId();

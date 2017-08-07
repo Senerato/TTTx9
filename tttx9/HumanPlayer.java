@@ -55,4 +55,14 @@ public class HumanPlayer implements Player {
 		return name;
 	}
 
+	@Override
+	public Move getMove(TTTx9Game ttt, GameState gs) {
+		Move nextMove;
+		if (gs.getLastMove() == null || gs.getNextSubGame().getWinner() != null)
+			nextMove = nextFreeTurn(gs);
+		else
+			nextMove = nextTurn(gs);
+		return nextMove;
+	}
+
 }
