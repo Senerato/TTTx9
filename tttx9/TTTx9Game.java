@@ -29,11 +29,12 @@ public class TTTx9Game {
 	}
 
 	/**
-	 * Play function. Runs an AI game, giving turns to both players.
+	 * Play function for two AI's. Runs an AI game, giving turns to both players until
+	 * the game has ended.
 	 * This function shows the gamestate in the console if true is given as parameter.
 	 * @param showGameStateInfo: shows information about the game when true.
 	 */
-	public void play(boolean showGameStateInfo) {
+	public void play2ai(boolean showGameStateInfo) {
 		
 		while (gameResult == GameResult.UNFINISHED) {
 			Move nextMove = hasTurn.getMove(this, gs); // Get a move from the current player.
@@ -44,6 +45,10 @@ public class TTTx9Game {
 					System.out.println(winner + " won the game!");
 			}
 		}
+	}
+	
+	public void play1ai(boolean showGameStateInfo) {
+		Move 
 	}
 
 	/**

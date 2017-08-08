@@ -17,7 +17,7 @@ public class Main {
 		//Player player2 = new HumanPlayer("Human player");
 		for (int i = 0; i < 10000; i++) {
 			TTTx9Game ttt = new TTTx9Game(player1, player2);
-			ttt.play(true);
+			ttt.play2ai(true);
 		}
 	}
 }
